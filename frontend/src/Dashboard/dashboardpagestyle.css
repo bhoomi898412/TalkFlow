@@ -242,3 +242,240 @@
   color: white;
   cursor: pointer;
 }
+
+.error-message{
+  background: #ffe5e5;
+  color: #d8000c;
+  padding: 12px 18px;
+  border-radius: 10px;
+  margin-top: 15px;
+  font-weight: 500;
+  text-align: center;
+  border: 1px solid #ffb3b3;
+
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.hide{
+  animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeIn{
+  from{
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to{
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* meeting room */
+.meeting-room {
+  min-height: calc(100vh - 140px);
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 12px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.meeting-header {
+  background: #1e293b;
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.meeting-header h2 {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.meeting-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.video-card {
+  width: 100%;
+  height: 420px;
+  background: #020617;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 12px;
+  object-fit: cover;
+  display: block;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+}
+
+.local-video {
+  transform: scaleX(-1);
+}
+
+body{
+  margin: 0;
+  padding: 0;
+  background: #0b1120;
+  font-family: sans-serif;
+}
+
+.meeting-room {
+  min-height: calc(100vh - 140px);
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 24px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  box-shadow: 0 24px 60px rgba(2, 6, 23, 0.42);
+}
+
+.meeting-header {
+  background: rgba(15, 23, 42, 0.78);
+  border-radius: 18px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  backdrop-filter: blur(12px);
+}
+
+.meeting-header h2 {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.meeting-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  grid-template-areas:
+    "local remote"
+    "controls controls";
+  gap: 12px 18px;
+  align-items: start;
+}
+
+.local-video {
+  grid-area: local;
+  transform: scaleX(-1);
+}
+
+.remote-video {
+  grid-area: remote;
+}
+
+.video-card {
+  width: 100%;
+  height: 390px;
+  background:
+    linear-gradient(180deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.96));
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 22px;
+  object-fit: cover;
+  display: block;
+  padding: 8px;
+  box-sizing: border-box;
+  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.34);
+}
+
+.controls {
+  grid-area: controls;
+  margin-top: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.controls button {
+  min-width: 160px;
+  padding: 13px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  outline: none;
+  border-radius: 16px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+.controls button:first-child {
+  background: linear-gradient(135deg, #334155, #1e293b);
+}
+
+.controls button:nth-child(2) {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+.controls .end-call {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.controls button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.42);
+}
+
+.controls button:first-child:hover {
+  background: linear-gradient(135deg, #475569, #334155);
+}
+
+.controls button:nth-child(2):hover {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.controls .end-call:hover {
+  background: linear-gradient(135deg, #f87171, #ef4444);
+}
+
+.controls button:active {
+  transform: scale(0.97);
+}
+
+@media (max-width: 1100px) {
+  .meeting-body {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "local"
+      "remote"
+      "controls";
+  }
+
+  .video-card {
+    height: 320px;
+  }
+}

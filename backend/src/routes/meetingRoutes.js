@@ -15,18 +15,21 @@ router.post("/save", async (req, res) => {
         userId
     });
 
-    if(!existingMeeting){
-        const meeting = await Meeting.create({
-            meetingId,
-            userId
-        });
+    let meeting;
+
+    if (!existingMeeting) {
+      meeting = await Meeting.create({
+        meetingId,
+        userId
+      });
+    } else {
+      meeting = existingMeeting;
     }
 
     res.status(201).json({
       message: "Meeting saved",
       meeting
     });
-
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });

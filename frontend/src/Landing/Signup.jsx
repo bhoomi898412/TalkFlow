@@ -11,7 +11,8 @@ function Signup() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSignup = async () => {
+  const handleSignup = async (e) => {
+    e.preventDefault();
     if(password !== confirmPassword){
       setMessage("Passwords do not match");
       return;

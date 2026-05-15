@@ -6,12 +6,13 @@ function DashboardHome() {
   const [user, setUser] = useState(null);
   const [meetingId, setMeetingId] = useState("");
   const [history, setHistory] = useState([]);
+  const [error, setError] = useState("");
   const storedUser = JSON.parse(localStorage.getItem("user"));
+  const [hideError, setHideError] = useState(false);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if(storedUser){
-      setUser(JSON.parse(storedUser));
+    if(storedUser){     
+      setUser(storedUser);
     }
   }, []);
 
@@ -33,11 +34,26 @@ function DashboardHome() {
         })
       });
 
-    navigate(`/meeting/${meetingId}`);
+    navigate(`/dashboard/meeting/${meetingId}`);
   };
 
   const joinMeeting = async () => {
-    if(!meetingId) return;
+    setError("");
+
+    if(!meetingId.trim()) {
+      setError("Please enter meeting code");
+      setHideError(false);
+
+      setTimeout(() => {
+        setHideError(true);
+      }, 2000);
+
+      setTimeout(() => {
+        setError("");
+      }, 2300);
+
+      return;
+    }
 
     await fetch("http://localhost:5000/api/meeting/save", {
       method: "POST",
@@ -50,7 +66,7 @@ function DashboardHome() {
       })
     });
 
-    navigate(`/meeting/${meetingId}`);
+    navigate(`/dashboard/meeting/${meetingId}`);
   };
 
   useEffect(() => {
@@ -72,6 +88,14 @@ function DashboardHome() {
         <h1>Welcome back, {user?.fullname} 👋</h1>
         <p>Start a new meeting or join an existing one instantly.</p>
 
+        {
+          error && (
+            <div className={`message-box error-message ${hideError ? "hide" : ""}`}>
+              {error}
+            </div>
+          )
+        }
+
         <div className="actions">
           <div className="newmit">
             <button onClick={createMeeting}>+ Start New Meeting</button>
@@ -92,7 +116,7 @@ function DashboardHome() {
               <p><strong>ID:</strong> {item.meetingId}</p>
               <p>{new Date(item.date).toLocaleString()}</p>
 
-              <button onClick={() => navigate(`/meeting/${item.meetingId}`)}>
+              <button onClick={() => navigate(`/dashboard/meeting/${item.meetingId}`)}>
                 Rejoin
               </button>
             </div>

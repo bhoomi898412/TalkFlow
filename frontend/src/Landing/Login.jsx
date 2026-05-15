@@ -10,8 +10,10 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [hideError, setHideError] = useState(false);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     setError("");
     setLoading(true);
 
@@ -46,8 +48,16 @@ function Login() {
 
       navigate("/dashboard");
     }catch (error) {
-      console.log(error);
       setError("Something went wrong");
+      setHideError(false);
+
+      setTimeout(() => {
+        setHideError(true);
+      }, 2000);
+
+      setTimeout(() => {
+        setError("");
+      }, 2300);
     } finally {
       setLoading(false);
     }
@@ -61,7 +71,7 @@ function Login() {
 
         {
           error && (
-            <div className="message-box">
+            <div className={`message-box error-message ${hideError ? "hide" : ""}`}>
               {error}
             </div>
           )

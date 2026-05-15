@@ -25,7 +25,7 @@ function DashboardPageWrapper() {
 
         <Routes>
           <Route path="/" element={<DashboardHome />} />
-          <Route path="meeting" element={<MeetingRoom />} />
+          <Route path="meeting/:meetingId" element={<MeetingRoom />} />
           <Route path="history" element={<History />} />
           <Route path="future-meetings" element={<FutureMeetings />} />
           <Route path="chats" element={<Chats />} />

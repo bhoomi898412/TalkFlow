@@ -5,7 +5,8 @@ const router = express.Router();
 
 // SIGNUP
 router.post("/signup", async (req, res) => {
-
+  console.log("SIGNUP HIT");
+  console.log(req.body);
   try {
 
     const { fullname, email, password } = req.body;
@@ -19,9 +20,9 @@ router.post("/signup", async (req, res) => {
 
     if(password.length < 6){
       return res.status(400).json({
-      message: "Password must be at least 6 characters"
-    });
-}
+        message: "Password must be at least 6 characters"
+      });
+    }
 
     // existing user check
     const existingUser = await User.findOne({ email : email.trim().toLowerCase() });
@@ -60,6 +61,8 @@ router.post("/signup", async (req, res) => {
 
 // login
 router.post("/login", async (req, res) => {
+    console.log("LOGIN HIT");
+   console.log(req.body);
     try {
       const { email, password } = req.body;
 
