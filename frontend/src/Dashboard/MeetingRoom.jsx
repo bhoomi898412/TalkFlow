@@ -11,8 +11,8 @@ function MeetingRoom() {
 
   const videoRef = useRef(null);       //for holding real HTML tag for video
   const streamRef = useRef(null);     //for holding stream which contain video and audio
-  const peerConnectionRef = useRef(null);    //webRTC connection object
-  const remoteVideoRef = useRef(null);   //dusre user ka video dikhane ke liye
+  const peerConnectionsRef = useRef({});    //webRTC connection object
+  const [remoteStreams, setRemoteStreams] = useState({});   //dusre user ka video dikhane ke liye
   const navigate = useNavigate();
 
   const [isMuted, setIsMuted] = useState(false);
@@ -30,12 +30,6 @@ function MeetingRoom() {
         console.log("Camera stream:", stream);
         streamRef.current = stream;
 
-        stream.getTracks().forEach((track) => {
-          peerConnectionRef.current.addTrack(track, stream);
-        });
-
-        console.log(peerConnectionRef.current);
-
         if(videoRef.current){
           videoRef.current.srcObject = stream;
         }
@@ -45,70 +39,115 @@ function MeetingRoom() {
       }
     };
 
-    const createOffer = async () => {
-      const offer = await peerConnectionRef.current.createOffer();
-      await peerConnectionRef.current.setLocalDescription(offer);
+    const createOffer = async (targetSocketId, pc) => {
+      console.log("Creating offer for:", targetSocketId);
 
-      console.log("Offer:", offer);
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
 
+      console.log("Sending offer to:", targetSocketId);
+        
       socketRef.current.emit("offer", {
         offer,
         meetingId,
+        targetSocketId,
       });
-    }
+    };
 
     const setupMeeting = async () => {
 
-      peerConnectionRef.current = new RTCPeerConnection();   //WebRTC connection object create
-
-      peerConnectionRef.current.ontrack = (event) => {    //auto triger event by browser when any audio or video come from another user or browser
-        console.log("Remote Stream Received");
-        if(remoteVideoRef.current){
-          remoteVideoRef.current.srcObject = event.streams[0];    
+      const createPeerConnection = (remoteSocketId) => {    //webRTC connection object create
+        if (peerConnectionsRef.current[remoteSocketId]) {   
+          return peerConnectionsRef.current[remoteSocketId];
         }
-      };
-
-      peerConnectionRef.current.onicecandidate = (event) => {   //auto triger eveny by browser when any new internet path find 
-        if(event.candidate){
-          console.log("Sending ICE Candidate:", event.candidate);
-
-          socketRef.current.emit("ice-candidate", {
-            candidate: event.candidate,
-            meetingId,
-          });
-        }
-      };
-  
-      await startCamera();  
       
+        const pc = new RTCPeerConnection();
+        peerConnectionsRef.current[remoteSocketId] = pc;
+      
+        streamRef.current.getTracks().forEach((track) => {
+          pc.addTrack(track, streamRef.current);
+        });
+      
+        pc.ontrack = (event) => {
+          console.log("ontrack fired for:", remoteSocketId, event.streams);
+
+          setRemoteStreams((prev) => ({
+            ...prev,
+            [remoteSocketId]: event.streams[0],
+          }));
+        };
+      
+        pc.onicecandidate = (event) => {
+          if (event.candidate) {
+            console.log("Sending ICE to:", remoteSocketId, event.candidate);
+
+            socketRef.current.emit("ice-candidate", {
+              candidate: event.candidate,
+              targetSocketId: remoteSocketId,
+            });
+          }
+        };
+      
+        return pc;
+      };      
+
+      await startCamera();  
       socketRef.current = io("http://localhost:5000");    //create live connection with backend
 
-      socketRef.current.on("user-joined", async () => {
-        await createOffer();
+      socketRef.current.on("existing-users", async (users) => {
+        console.log("existing-users:", users);
+        for (const socketId of users) {
+          if (peerConnectionsRef.current[socketId]) continue;
+
+          console.log("Creating offer for existing user:", socketId);
+          const pc = createPeerConnection(socketId);
+          await createOffer(socketId, pc);
+        }
       });
 
-      socketRef.current.on("receive-offer", async (offer) => {
-        console.log("Received Offer:", offer);
-        await peerConnectionRef.current.setRemoteDescription(offer);
+      socketRef.current.on("user-joined", ({ socketId }) => {
+        console.log("user-joined event:", socketId);
+      });
 
-        const answer = await peerConnectionRef.current.createAnswer();
-        await peerConnectionRef.current.setLocalDescription(answer);
-        console.log("Answer:", answer);
+      socketRef.current.on("receive-offer", async ({ offer, fromSocketId }) => {
+        console.log("Received offer from:", fromSocketId);
 
+        let pc = peerConnectionsRef.current[fromSocketId];
+
+        if (!pc) {
+          console.log("No PC found, creating for:", fromSocketId);
+          pc = createPeerConnection(fromSocketId);
+        }
+      
+        await pc.setRemoteDescription(offer);
+      
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+
+        console.log("Sending answer to:", fromSocketId);
+      
         socketRef.current.emit("answer", {
           answer,
-          meetingId,
+          targetSocketId: fromSocketId,
         });
       });
 
-      socketRef.current.on("receive-answer", async (answer) => {
-        console.log("Received Answer:", answer);
-        await peerConnectionRef.current.setRemoteDescription(answer);
+      socketRef.current.on("receive-answer", async ({ answer, fromSocketId }) => {
+        console.log("Received answer from:", fromSocketId);
+
+        const pc = peerConnectionsRef.current[fromSocketId];
+        if (pc) {
+          await pc.setRemoteDescription(answer);
+        }
       });
 
-      socketRef.current.on("receive-ice-candidate", async (candidate) => {
-        console.log("Received ICE Candidate:", candidate);
-        await peerConnectionRef.current.addIceCandidate(candidate);
+      socketRef.current.on("receive-ice-candidate", async ({ candidate, fromSocketId }) => {
+        console.log("Received ICE from:", fromSocketId, candidate);
+
+        const pc = peerConnectionsRef.current[fromSocketId];
+        if (pc) {
+          await pc.addIceCandidate(candidate);
+        }
       });
 
       socketRef.current.emit("join-meeting", meetingId);   //create req for join meeting using meetingId
@@ -121,10 +160,11 @@ function MeetingRoom() {
       if (socketRef.current) {
         socketRef.current.disconnect();
       }
-      // 2. peer connection close
-      if (peerConnectionRef.current) {
-        peerConnectionRef.current.close();
-      }
+      // 2. close peer connection
+      Object.values(peerConnectionsRef.current).forEach((pc) => {
+        pc.close();
+      });
+      peerConnectionsRef.current = {};
       // 3. stop camera + mic
       if (streamRef.current) {      
         streamRef.current.getTracks().forEach((track) => {
@@ -136,15 +176,27 @@ function MeetingRoom() {
     }
   }, []);
 
+  console.log("remoteStreams state:", Object.keys(remoteStreams));
+
+  const participantCount = 1 + Object.keys(remoteStreams).length;
+  
+  let gridClass = "video-grid";
+  if (participantCount === 1) gridClass += " one-user";
+  else if (participantCount === 2) gridClass += " two-users";
+  else if (participantCount === 3) gridClass += " three-users";
+  else if (participantCount === 4) gridClass += " four-users";
+  else gridClass += " many-users";
+
   const endMeeting = async () => {
     // 1. socket disconnect
     if (socketRef.current) {
       socketRef.current.disconnect();
     }
     // 2. peer connection close
-    if (peerConnectionRef.current) {
-      peerConnectionRef.current.close();
-    }
+    Object.values(peerConnectionsRef.current).forEach((pc) => {
+      pc.close();
+    });
+    peerConnectionsRef.current = {};
     // 3. stop camera + mic
     if (streamRef.current) {      
       streamRef.current.getTracks().forEach((track) => {
@@ -193,22 +245,35 @@ function MeetingRoom() {
       </div>
       
       <div className="meeting-body">
-        <video
-          className="video-card local-video"
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted
-          width="50%"
-        />
 
-        <video
-          className="video-card remote-video"
-          ref={remoteVideoRef}
-          autoPlay
-          playsInline
-          width="95%"
-        />
+        <div className={gridClass}>
+          <div className="video-tile">
+            <video
+              className="video-card local-video"
+              ref={videoRef}
+              autoPlay
+              playsInline
+              muted
+            />
+            <div className="video-label">You</div>
+          </div>
+
+          {Object.entries(remoteStreams).map(([socketId, stream], index) => (
+            <div className="video-tile" key={socketId}>
+              <video
+                className="video-card remote-video"
+                autoPlay
+                playsInline
+                ref={(el) => {
+                  if (el) {
+                    el.srcObject = stream;
+                  }
+                }}
+              />
+              <div className="video-label">Participant {index + 1}</div>
+            </div>
+          ))}
+        </div>
 
         <div className="controls">
           <button onClick={toggleMute}>
