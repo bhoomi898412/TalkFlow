@@ -7,6 +7,7 @@ function DashboardHome() {
   const [meetingId, setMeetingId] = useState("");
   const [history, setHistory] = useState([]);
   const [error, setError] = useState("");
+  
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const [hideError, setHideError] = useState(false);
 

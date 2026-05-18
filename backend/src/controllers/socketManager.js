@@ -8,7 +8,7 @@ const connectToSocket = (server) => {
     },
   });
 
-  io.on("connection", (socket) => {   //connection is in buil-it function run when any user req on "http://localhost:5000"
+  io.on("connection", (socket) => {   //connection is buil-in function run when any user req on "http://localhost:5000"
 
     console.log("User connected:", socket.id);
 
@@ -30,7 +30,7 @@ const connectToSocket = (server) => {
       socket.to(meetingId).emit("receive-answer", answer);
     });
 
-    socket.on("ice-candidate", ({ candidate, meetingId }) => {
+    socket.on("ice-candidate", ({ candidate, meetingId }) => {    //browser jab network route find karta hai tab ye event auto-run hota hai
       socket.to(meetingId).emit("receive-ice-candidate", candidate);
     });
   });
