@@ -7,12 +7,11 @@ const router = express.Router();
 router.post("/save", async (req, res) => {
 
   try {
-
     const { meetingId, userId } = req.body;
 
     const existingMeeting = await Meeting.findOne({
-        meetingId,
-        userId
+      meetingId,
+      userId
     });
 
     let meeting;

@@ -7,6 +7,9 @@ import connectToSocket from "./controllers/socketManager.js";
 
 import authRoutes from "./routes/authRoutes.js";
 import meetingRoutes from "./routes/meetingRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
+import futureMeetingRoutes from "./routes/futureMeetingRoutes.js";
+import supportRoutes from "./routes/supportRoutes.js";
 
 dotenv.config();
 
@@ -26,6 +29,9 @@ app.use(express.urlencoded({
 
 app.use("/api/auth", authRoutes);
 app.use("/api/meeting", meetingRoutes);
+app.use("/api/chat", chatRoutes);
+app.use("/api/future-meetings", futureMeetingRoutes);
+app.use("/api/support", supportRoutes);
 
 app.get("/home", (req, res) => {
   return res.json({ hello: "world" });

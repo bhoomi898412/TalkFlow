@@ -10,14 +10,12 @@ function Sidebar() {
             <li><Link to="/dashboard">Dashboard</Link></li>
             <li><Link to="/dashboard/future-meetings">Future Meetings</Link></li>
             <li><Link to="/dashboard/chats">Chats</Link></li>
-            <li><Link to="/dashboard/tasks">Tasks / To-Do</Link></li>
             <li><Link to="/dashboard/profile">Profile</Link></li>
         </ul>
       </div>
 
       <div className="secondarynavigation">
         <ul>
-            <li>⚙️ <Link to="/dashboard/settings">Settings</Link></li>
             <li>❓ <Link to="/dashboard/help">Help / Support</Link></li>
         </ul>
       </div>

@@ -1,5 +1,5 @@
 import express from "express";
-import User from "../models/User.js";
+import User from "../models/user.js";
 
 const router = express.Router();
 
@@ -62,7 +62,8 @@ router.post("/signup", async (req, res) => {
 // login
 router.post("/login", async (req, res) => {
     console.log("LOGIN HIT");
-   console.log(req.body);
+    console.log(req.body);
+    
     try {
       const { email, password } = req.body;
 

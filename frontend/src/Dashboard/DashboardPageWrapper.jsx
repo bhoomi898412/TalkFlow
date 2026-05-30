@@ -9,9 +9,7 @@ import History from "./History";
 
 import FutureMeetings from "./components/pages/FutureMeetings";
 import Chats from "./components/pages/Chats";
-import Tasks from "./components/pages/Tasks";
 import Profile from "./components/pages/Profile";
-import Settings from "./components/pages/Settings";
 import Help from "./components/pages/Help";
 
 function DashboardPageWrapper() {
@@ -29,9 +27,7 @@ function DashboardPageWrapper() {
           <Route path="history" element={<History />} />
           <Route path="future-meetings" element={<FutureMeetings />} />
           <Route path="chats" element={<Chats />} />
-          <Route path="tasks" element={<Tasks />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="settings" element={<Settings />} />
           <Route path="help" element={<Help />} />
         </Routes>
 
