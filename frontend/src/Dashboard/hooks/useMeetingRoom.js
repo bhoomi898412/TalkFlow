@@ -80,7 +80,7 @@ function useMeetingRoom(meetingId) {
     const fetchMessages = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/chat/meeting/${meetingId}`
+          `${import.meta.env.VITE_API_URL}/api/chat/meeting/${meetingId}`
         );
 
         const data = await res.json();
@@ -132,7 +132,7 @@ function useMeetingRoom(meetingId) {
       await startCamera();
       await fetchMessages();
 
-      socketRef.current = io("http://localhost:5000");
+      socketRef.current = io(import.meta.env.VITE_API_URL);
 
       socketRef.current.on("connect", () => {
         mySocketIdRef.current = socketRef.current.id;

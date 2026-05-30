@@ -18,7 +18,7 @@ function Chats() {
         setLoadingMeetings(true);
 
         const res = await fetch(
-          `http://localhost:5000/api/chat/user/${storedUser.id}`
+          `${import.meta.env.VITE_API_URL}/api/chat/user/${storedUser.id}`
         );
 
         const data = await res.json();
@@ -56,7 +56,7 @@ function Chats() {
         setLoadingMessages(true);
 
         const res = await fetch(
-          `http://localhost:5000/api/chat/meeting/${selectedMeetingId}`
+          `${import.meta.env.VITE_API_URL}/api/chat/meeting/${selectedMeetingId}`
         );
 
         const data = await res.json();

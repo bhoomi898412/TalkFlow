@@ -11,7 +11,7 @@ function FutureMeetings() {
           const storedUser = JSON.parse(localStorage.getItem("user"));
         
           const response = await fetch(
-            `http://localhost:5000/api/future-meetings/${storedUser.id}`
+            `${import.meta.env.VITE_API_URL}/api/future-meetings/${storedUser.id}`
           );
         
           const data = await response.json();
@@ -67,7 +67,7 @@ function FutureMeetings() {
       try {
         const storedUser = JSON.parse(localStorage.getItem("user"));
               
-        const response = await fetch("http://localhost:5000/api/future-meetings/save", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/future-meetings/save`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

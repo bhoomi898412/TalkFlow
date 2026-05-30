@@ -23,7 +23,7 @@ function DashboardHome() {
       "-" +
       Math.random().toString(36).substring(2, 4).toUpperCase();
 
-      await fetch("http://localhost:5000/api/meeting/save", {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/meeting/save`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ function DashboardHome() {
       return;
     }
 
-    await fetch("http://localhost:5000/api/meeting/save", {
+    await fetch(`${import.meta.env.VITE_API_URL}/api/meeting/save`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -72,7 +72,7 @@ function DashboardHome() {
   useEffect(() => {
     const fetchHistory = async () => {
       const res = await fetch(
-        `http://localhost:5000/api/meeting/${storedUser.id}`
+        `${import.meta.env.VITE_API_URL}/api/meeting/${storedUser.id}`
       );
 
       const data = await res.json();
