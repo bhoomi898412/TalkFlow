@@ -512,28 +512,22 @@ body{
 }
 
 .controls {
-  width: 100%;
   display: flex;
+  gap: 12px;
   justify-content: center;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-top: 6px;
 }
 
 .controls button {
-  min-width: 160px;
-  padding: 13px 22px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  outline: none;
-  border-radius: 16px;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 600;
+   width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: none;
   cursor: pointer;
-  transition: all 0.25s ease;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+  font-size: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .controls button:first-child {

@@ -1,3 +1,13 @@
+import {
+  FaMicrophone,
+  FaMicrophoneSlash,
+  FaVideo,
+  FaVideoSlash,
+  FaDesktop,
+  FaComments,
+  FaPhoneSlash,
+} from "react-icons/fa";
+
 function MeetingControls({
   isMuted,
   isCameraOff,
@@ -11,22 +21,22 @@ function MeetingControls({
 }) {
   return (
     <div className="controls">
-      <button onClick={toggleMute}>{isMuted ? "Unmute" : "Mute"}</button>
+      <button onClick={toggleMute}>{isMuted ? <FaMicrophoneSlash /> : <FaMicrophone />}</button>
 
       <button onClick={toggleCamera}>
-        {isCameraOff ? "Open Camera" : "Close Camera"}
+        {isCameraOff ? <FaVideoSlash /> : <FaVideo />}
       </button>
 
       <button className="end-call" onClick={endMeeting}>
-        End Meeting
+        <FaPhoneSlash />
       </button>
 
       <button className="screen-share" onClick={toggleScreenShare}>
-        {isScreenShare ? "Stop Sharing" : "Screen Share"}
+        <FaDesktop />
       </button>
 
       <button className="chat-toggle" onClick={toggleChat}>
-        Chat {messagesCount > 0 ? `(${messagesCount})` : ""}
+         <FaComments />
       </button>
     </div>
   );

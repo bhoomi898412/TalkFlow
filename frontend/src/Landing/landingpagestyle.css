@@ -764,3 +764,68 @@ section {
 
   font-size: 14px;
 }
+
+@media (max-width: 768px) {
+
+  .navbar {
+    padding: 15px;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .navbar div {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero h1,
+  .featurehero h1,
+  .pricinghero h1,
+  .supporthero h1 {
+    font-size: 32px;
+  }
+
+  .testimonial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quelist {
+    grid-template-columns: 1fr;
+  }
+
+  .login-box,
+  .signup-box {
+    width: 90%;
+    padding: 25px;
+    box-sizing: border-box;
+  }
+
+  .dashboard-main {
+    margin-left: 0;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .topbar {
+    flex-direction: column;
+    height: auto;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .topbar-right {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .meeting-card {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+}
