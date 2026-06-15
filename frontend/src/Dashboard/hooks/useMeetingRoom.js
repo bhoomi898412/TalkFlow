@@ -103,7 +103,34 @@ function useMeetingRoom(meetingId) {
           return peerConnectionsRef.current[remoteSocketId];
         }
 
-        const pc = new RTCPeerConnection();
+        const pc = new RTCPeerConnection({
+          iceServers: [
+          {
+            urls: "stun:stun.relay.metered.ca:80",
+          },
+          {
+            urls: "turn:global.relay.metered.ca:80",
+            username: "e4defa743d4b3f2c86be4624",
+            credential: "KgiuKpQ/AIIgp3pl",
+          },
+          {
+            urls: "turn:global.relay.metered.ca:80?transport=tcp",
+            username: "e4defa743d4b3f2c86be4624",
+            credential: "KgiuKpQ/AIIgp3pl",
+          },
+          {
+            urls: "turn:global.relay.metered.ca:443",
+            username: "e4defa743d4b3f2c86be4624",
+            credential: "KgiuKpQ/AIIgp3pl",
+          },
+          {
+            urls: "turns:global.relay.metered.ca:443?transport=tcp",
+            username: "e4defa743d4b3f2c86be4624",
+            credential: "KgiuKpQ/AIIgp3pl",
+          },
+          ],
+        });
+
         peerConnectionsRef.current[remoteSocketId] = pc;
 
         streamRef.current.getTracks().forEach((track) => {
