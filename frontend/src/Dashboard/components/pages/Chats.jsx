@@ -9,6 +9,7 @@ function Chats() {
   const [messages, setMessages] = useState([]);
   const [loadingMeetings, setLoadingMeetings] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [showMobileChat, setShowMobileChat] = useState(false);
 
   useEffect(() => {
     const fetchMeetings = async () => {
@@ -73,11 +74,15 @@ function Chats() {
 
   const handleSelectMeeting = (meetingId) => {
     setSelectedMeetingId(meetingId);
+
+    if (window.innerWidth <= 768) {
+      setShowMobileChat(true);
+    }
   };
 
   return (
     <div className="dashboard-chats-page">
-      <div className="chat-list-panel">
+      <div className={`chat-list-panel ${ showMobileChat ? "mobile-hide" : ""}`}>
         <div className="chat-list-title">
           <p>Meeting conversations</p>
           <h2>Chats</h2>
@@ -122,8 +127,18 @@ function Chats() {
         </div>
       </div>
 
-      <div className="chat-history-panel">
+      <div className={`chat-history-panel ${ showMobileChat ? "mobile-show-chat" : "" }`}>
         <div className="chat-history-header">
+
+          {showMobileChat && (
+            <button
+              className="mobile-chat-back"
+              onClick={() => setShowMobileChat(false)}
+            >
+              ← Back
+            </button>
+          )}
+
           <div>
             <p>Conversation</p>
             <h2>{selectedMeetingId || "Select a meeting"}</h2>
