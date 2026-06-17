@@ -1,19 +1,12 @@
-function VideoGrid({ gridClass, videoRef, remoteStreams }) {
-  return (
-    <div className={gridClass}>
-      <div className="video-tile">
-        <video
-          className="video-card local-video"
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted
-        />
-        <div className="video-label">You</div>
-      </div>
+function VideoGrid({ videoRef, remoteStreams }) {
+
+ return (
+
+  <div className="meeting-stage">
+    <div className="remote-grid">
 
       {Object.entries(remoteStreams).map(([socketId, stream], index) => (
-        <div className="video-tile" key={socketId}>
+        <div className="remote-tile" key={socketId}>
           <video
             className="video-card remote-video"
             autoPlay
@@ -24,10 +17,44 @@ function VideoGrid({ gridClass, videoRef, remoteStreams }) {
               }
             }}
           />
-          <div className="video-label">Participant {index + 1}</div>
+          <div className="video-label">
+            Participant {index + 1}
+          </div>
         </div>
       ))}
+
+      {Object.keys(remoteStreams).length === 0 && (
+        <div className="remote-tile">
+          <video
+            className="video-card local-video"
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+          />
+          <div className="video-label">
+            You
+          </div>
+        </div>
+      )}
+
     </div>
+    
+    {Object.keys(remoteStreams).length > 0 && (
+      <div className="local-preview">
+        <video
+          className="video-card local-video"
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted
+        />
+        <div className="video-label">
+          You
+        </div>
+      </div>
+    )}
+  </div>
   );
 }
 

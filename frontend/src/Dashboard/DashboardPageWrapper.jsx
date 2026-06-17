@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import "./dashboardpagestyle.css";
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
@@ -13,13 +14,18 @@ import Profile from "./components/pages/Profile";
 import Help from "./components/pages/Help";
 
 function DashboardPageWrapper() {
+  const location = useLocation();
+
+  const isMeetingPage = location.pathname.includes("/meeting/");
+
     return (
     <div className="dashboard-layout">
       
-      <Sidebar />
+      {!isMeetingPage && <Sidebar />}
 
-      <div className="dashboard-main">
-        <Topbar />
+      <div className={isMeetingPage ? "meeting-fullscreen" : "dashboard-main"}>
+        
+        {!isMeetingPage && <Topbar />}
 
         <Routes>
           <Route path="/" element={<DashboardHome />} />
