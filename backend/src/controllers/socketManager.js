@@ -4,7 +4,6 @@ import ChatMessage from "../models/chatMessage.js";
 const connectToSocket = (server) => {
 
   const meetingPresenters = new Map();
-  let joinedMeetingId = null;
 
   const io = new Server(server, {
     cors: {
@@ -20,7 +19,7 @@ const connectToSocket = (server) => {
     console.log("User connected:", socket.id);
 
     socket.on("join-meeting", (meetingId) => {
-      joinedMeetingId = meetingId;
+      socket.joinedMeetingId = meetingId;
       const room = io.sockets.adapter.rooms.get(meetingId);
       const existingUsers = room ? [...room] : [];
         
@@ -31,6 +30,10 @@ const connectToSocket = (server) => {
       socket.to(meetingId).emit("user-joined", {
         socketId: socket.id,
       });
+    });
+
+    socket.on("user-joined" , () => {
+      console.log("user joined");
     });
 
     socket.on("offer", ({ offer, targetSocketId  }) => {  
@@ -118,8 +121,8 @@ const connectToSocket = (server) => {
     });
 
     socket.on("disconnect", () => {
-      if (joinedMeetingId) {
-        socket.to(joinedMeetingId).emit("user-left", {
+      if (socket.joinedMeetingId) {
+        socket.to(socket.joinedMeetingId).emit("user-left", {
           socketId: socket.id,
         });
       }
