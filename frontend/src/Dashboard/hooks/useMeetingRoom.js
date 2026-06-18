@@ -5,6 +5,9 @@ import { io } from "socket.io-client";
 function useMeetingRoom(meetingId) {
   const navigate = useNavigate();
 
+  const TURN_USERNAME = import.meta.env.VITE_TURN_USERNAME;
+  const TURN_CREDENTIAL = import.meta.env.VITE_TURN_CREDENTIAL;
+
   const socketRef = useRef(null);
   const videoRef = useRef(null);
   const localStreamRef = useRef(null);
@@ -114,23 +117,23 @@ function useMeetingRoom(meetingId) {
           },
           {
             urls: "turn:global.relay.metered.ca:80",
-            username: "e4defa743d4b3f2c86be4624",
-            credential: "KgiuKpQ/AIIgp3pl",
+            username: TURN_USERNAME,
+            credential: TURN_CREDENTIAL,
           },
           {
             urls: "turn:global.relay.metered.ca:80?transport=tcp",
-            username: "e4defa743d4b3f2c86be4624",
-            credential: "KgiuKpQ/AIIgp3pl",
+            username: TURN_USERNAME,
+            credential: TURN_CREDENTIAL,
           },
           {
             urls: "turn:global.relay.metered.ca:443",
-            username: "e4defa743d4b3f2c86be4624",
-            credential: "KgiuKpQ/AIIgp3pl",
+            username: TURN_USERNAME,
+            credential: TURN_CREDENTIAL,
           },
           {
             urls: "turns:global.relay.metered.ca:443?transport=tcp",
-            username: "e4defa743d4b3f2c86be4624",
-            credential: "KgiuKpQ/AIIgp3pl",
+            username: TURN_USERNAME,
+            credential: TURN_CREDENTIAL,
           },
           ],
         });
