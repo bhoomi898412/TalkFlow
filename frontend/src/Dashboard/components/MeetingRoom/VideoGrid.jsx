@@ -1,4 +1,5 @@
-function VideoGrid({ videoRef, remoteStreams }) {
+function VideoGrid({ videoRef, remoteStreams, localStreamRef,
+ }) {
 
  return (
 
@@ -27,7 +28,11 @@ function VideoGrid({ videoRef, remoteStreams }) {
         <div className="remote-tile">
           <video
             className="video-card local-video"
-            ref={videoRef}
+            ref={(el) => {
+              if (el && localStreamRef.current) {
+                el.srcObject = localStreamRef.current;
+              }
+            }}
             autoPlay
             playsInline
             muted
@@ -44,7 +49,11 @@ function VideoGrid({ videoRef, remoteStreams }) {
       <div className="local-preview">
         <video
           className="video-card local-video"
-          ref={videoRef}
+          ref={(el) => {
+            if (el && localStreamRef.current) {
+              el.srcObject = localStreamRef.current;
+            }
+          }}
           autoPlay
           playsInline
           muted

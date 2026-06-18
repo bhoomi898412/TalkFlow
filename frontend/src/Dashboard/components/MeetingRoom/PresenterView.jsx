@@ -3,6 +3,7 @@ function PresenterView({
   presenterStream,
   videoRef,
   otherRemoteEntries,
+  localStreamRef,
 }) {
   return (
     <>
@@ -40,7 +41,11 @@ function PresenterView({
           <div className="video-tile small-tile">
             <video
               className="video-card local-video"
-              ref={videoRef}
+              ref={(el) => {
+                if (el && localStreamRef.current) {
+                  el.srcObject = localStreamRef.current;
+                }
+              }}
               autoPlay
               playsInline
               muted

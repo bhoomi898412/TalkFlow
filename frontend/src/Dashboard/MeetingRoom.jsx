@@ -11,6 +11,7 @@ function MeetingRoom() {
 
   const {
     videoRef,
+    localStreamRef,
     remoteStreams,
     isMuted,
     isCameraOff,
@@ -50,12 +51,14 @@ function MeetingRoom() {
               presenterStream={presenterStream}
               videoRef={videoRef}
               otherRemoteEntries={otherRemoteEntries}
+              localStreamRef={localStreamRef}
             />
           ) : (
             <VideoGrid
               gridClass={gridClass}
               videoRef={videoRef}
               remoteStreams={remoteStreams}
+              localStreamRef={localStreamRef}
             />
           )}
 

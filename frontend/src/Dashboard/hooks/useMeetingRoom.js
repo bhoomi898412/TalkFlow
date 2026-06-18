@@ -7,6 +7,7 @@ function useMeetingRoom(meetingId) {
 
   const socketRef = useRef(null);
   const videoRef = useRef(null);
+  const localStreamRef = useRef(null);
   const streamRef = useRef(null);
   const screenRef = useRef(null);
   const peerConnectionsRef = useRef({});
@@ -57,10 +58,13 @@ function useMeetingRoom(meetingId) {
         });
 
         streamRef.current = stream;
+        localStreamRef.current = stream;
 
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }
+        console.log("VIDEO REF:", videoRef.current);
+        console.log("STREAM:", stream);
       } catch (error) {
         console.log("Error accessing media devices", error);
       }
@@ -401,6 +405,7 @@ function useMeetingRoom(meetingId) {
 
   return {
     videoRef,
+    localStreamRef,
     remoteStreams,
     isMuted,
     isCameraOff,
