@@ -4,8 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/app.js",
-    "start": "node src/app.js",
+    "dev": "node init && nodemon src/app.js",
+    "start": "node init && node src/app.js",
     "prod": "pm2 src/app.js"
   },
   "author": "bhoomi",
